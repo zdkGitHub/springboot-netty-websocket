@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script >
+        var socket;
+        $(function() {
+            init();
+
+            $("#bt_1").click(function(){
+                alert("1")
+                let msg = {
+                    type: 'APP_LOGIN',
+                    userId: "user1"
+                };
+                socket.send(JSON.stringify(msg));
+            });
+
+            $("#bt_2").click(function(){
+                alert("2")
+                let msg = {
+                    type: 'APP_LOGIN',
+                    userId: "user2"
+                };
+                socket.send(JSON.stringify(msg));
+            });
+
+            $("#bt_3").click(function(){
+                alert("3")
+                user = $('#mag').val();
+                let msg = {
+                    type: 'UNICAST',
+                    userId: "user2"
+                };
+                socket.send(JSON.stringify(msg));
+            });
+
+            $("#bt_4").click(function(){
+                alert("4")
+                user = $('#mag').val();
+                let msg = {
+                    type: 'BROADCAST',
+                    userId: "user2"
+                };
+                socket.send(JSON.stringify(msg));
+            });
+
+        });
+
+        
+     
+        //初始化
+        function init() {
+            if (!window.WebSocket) {
+                window.WebSocket = window.MozWebSocket;
+            }
+            if (window.WebSocket) {
+                //获取h5 socket
+                socket = new WebSocket("ws://127.0.0.1:9099/");
+                //接收消息
+                socket.onmessage = function(data){
+                    console.log("socket.onmessage:")
+                    console.log(data);
+                    var mage = JSON.parse(data.data);
+                     console.log(mage);
+
+                     if(mage.type == 'qx'){
+                        $('#top').text(mage.userId + '被取消创建员工权限');
+                     }else if(mage.type == 'zx'){
+                        $('#top').text(mage.userId + '会员单位被注销');
+                     }
+                }
+                //webSocket的链接
+                socket.onopen = function(data) {
+                    $('#top').text('连接成功');
+                    console.log("socket.onopen:")
+                    console.log(data);
+                }
+                //webSocket关闭
+                socket.onclose = function(data) {
+                    console.log("socket.onclose:")
+                    console.log(data);
+                }
+                //webSocket错误信息
+                socket.onerror = function(data) {
+                    console.log("socket.onerror:")
+                    console.log(data);
+                }
+            } else {
+                alert("抱歉，您的浏览器不支持WebSocket协议!");
+            }
+        }
+     
+
+    </script>
+</head>
+<body>
+ 
+    <div id="top">请等待连接</div>
+    
+    <button id = "bt_1" >user1登录</button>
+    <button id = "bt_2" >user2登录</button>
+    <br/>
+    <input id = "bt_3" type="button" value="取消user2创建员工权限"/>
+    <input id = "bt_4" type="button" value="注销user2会员单位"/>
+
+</body>
+
+</html>
