@@ -26,7 +26,8 @@ import java.util.Map;
 public class MyChannelHandler extends SimpleChannelInboundHandler<Object> {
 
     private WebSocketServerHandshaker webSocketServerHandshaker;
-    private static final String WEB_SOCKET_URL = "ws://localhost:8888/webSocket";
+    //private static final String WEB_SOCKET_URL = "ws://localhost:8888/webSocket";
+    private static final String WEB_SOCKET_URL = "ws://localhost:9099/";
 
     //客户端与服务端创建链接的时候调用
     @Override
@@ -98,6 +99,7 @@ public class MyChannelHandler extends SimpleChannelInboundHandler<Object> {
                 WebSocketSendMessage unicastMessage = new WebSocketSendMessage();
                 unicastMessage.setUserId(webSocketReceiveMessage.getUserId());
                 unicastMessage.setType("qx");
+                unicastMessage.setContent(webSocketReceiveMessage.getContent());
                 NettyConfig.channelMap.get(webSocketReceiveMessage.getUserId()).writeAndFlush(new TextWebSocketFrame(JsonUtil.toJson(unicastMessage)));
                 break;
 
@@ -106,6 +108,7 @@ public class MyChannelHandler extends SimpleChannelInboundHandler<Object> {
                 WebSocketSendMessage broadcastMessage = new WebSocketSendMessage();
                 broadcastMessage.setUserId(webSocketReceiveMessage.getUserId());
                 broadcastMessage.setType("zx");
+                broadcastMessage.setContent(webSocketReceiveMessage.getContent());
                 NettyConfig.channelGroup.writeAndFlush(new TextWebSocketFrame(JsonUtil.toJson(broadcastMessage)));
                 break;
         }

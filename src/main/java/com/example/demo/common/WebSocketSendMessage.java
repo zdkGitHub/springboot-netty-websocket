@@ -14,4 +14,6 @@ public class WebSocketSendMessage {
 
     private String userId;
 
+    private String content;
+
 }

@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>test</title>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="./jquery-3.5.1.min.js"></script>
     <script >
         var socket;
         $(function() {
             init();
 
-            $("#bt_1").click(function(){
-                alert("1")
+            $("#bt_user1login").click(function(){
                 let msg = {
                     type: 'APP_LOGIN',
                     userId: "user1"
@@ -18,11 +17,17 @@
                 socket.send(JSON.stringify(msg));
             });
 
-            $("#bt_2").click(function(){
-                alert("2")
+            $("#bt_user2login").click(function(){
                 let msg = {
                     type: 'APP_LOGIN',
                     userId: "user2"
+                };
+                socket.send(JSON.stringify(msg));
+            });
+            $("#bt_user3login").click(function(){
+                let msg = {
+                    type: 'APP_LOGIN',
+                    userId: "user3"
                 };
                 socket.send(JSON.stringify(msg));
             });
@@ -47,6 +52,28 @@
                 socket.send(JSON.stringify(msg));
             });
 
+            $("#bt_5").click(function(){
+
+                msgText = $('#msgText').val();
+                let msg = {
+                    type: 'UNICAST',
+                    userId: "user3",
+                    content: msgText
+                };
+                socket.send(JSON.stringify(msg));
+            });
+
+            $("#bt_6").click(function(){
+
+                msgText = $('#msgText').val();
+                let msg = {
+                    type: 'BROADCAST',
+                    userId: "user2",
+                    content: msgText
+                };
+                socket.send(JSON.stringify(msg));
+            });
+
         });
 
         
@@ -66,11 +93,13 @@
                     var mage = JSON.parse(data.data);
                      console.log(mage);
 
-                     if(mage.type == 'qx'){
+                     /*if(mage.type == 'qx'){
                         $('#top').text(mage.userId + '被取消创建员工权限');
                      }else if(mage.type == 'zx'){
                         $('#top').text(mage.userId + '会员单位被注销');
-                     }
+                     }*/
+                    $('#top').text(mage.content);
+                    alert(mage.content)
                 }
                 //webSocket的链接
                 socket.onopen = function(data) {
@@ -100,11 +129,16 @@
  
     <div id="top">请等待连接</div>
     
-    <button id = "bt_1" >user1登录</button>
-    <button id = "bt_2" >user2登录</button>
+    <button id = "bt_user1login" >user1登录</button>
+    <button id = "bt_user2login" >user2登录</button>
+    <button id = "bt_user3login" >user3登录</button>
     <br/>
     <input id = "bt_3" type="button" value="取消user2创建员工权限"/>
     <input id = "bt_4" type="button" value="注销user2会员单位"/>
+    <br/>
+    <input id = "msgText" type="text"  />
+    <input id = "bt_5" type="button" value="点对点-给user3发送消息"/>
+    <input id = "bt_6" type="button" value="广播"/>
 
 </body>
 

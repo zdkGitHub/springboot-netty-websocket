@@ -12,4 +12,5 @@ public class WebSocketReceiveMessage {
 
     private String userId;
 
+    private String content;
 }
